@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -10,15 +10,21 @@ export default function DocumentList({
   selectedDocs,
   setSelectedDocs,
 }) {
+  const [error, setError] = useState(null);
+
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const res = await axios.get(`${API_URL}/documents`, {
           headers: { Authorization: `Bearer ${token}` },
         });
+        setError(null);
         setDocuments(res.data.documents);
       } catch (err) {
         console.error("Erreur de chargement des documents", err);
+        setError(
+          "Impossible de charger la liste des documents. Réessaie de te reconnecter.",
+        );
       }
     };
     fetchDocuments();
@@ -35,7 +41,8 @@ export default function DocumentList({
   return (
     <div className="bg-white p-4 rounded-lg border space-y-2">
       <h2 className="text-sm font-medium text-gray-700">Documents</h2>
-      {documents.length === 0 && (
+      {error && <p className="text-xs text-red-500">{error}</p>}
+      {!error && documents.length === 0 && (
         <p className="text-xs text-gray-400">Aucun document pour l'instant.</p>
       )}
       <ul className="space-y-1">

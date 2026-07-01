@@ -31,6 +31,8 @@ export default function App() {
             onClick={() => {
               setUser(null);
               setToken(null);
+              setDocuments([]);
+              setSelectedDocs([]);
             }}
             className="text-sm text-red-500 hover:underline"
           >
